@@ -12,7 +12,6 @@ CELL_SIZE = WIDTH // GRID_SIZE
 GRID_COLOR = (50, 50, 50)
 
 game_board = [[0] * GRID_SIZE for _ in range(GRID_SIZE)]
-
 current_shape = get_random_shape()
 
 selected_shape = None
