@@ -13,6 +13,10 @@ GRID_COLOR = (50, 50, 50)
 
 current_shape = get_random_shape()
 
+selected_shape = None
+shape_x, shape_y = 100, 100
+dragging = False
+
 
 def draw_grid():
     for x in range(0, WIDTH, CELL_SIZE):
@@ -37,11 +41,33 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            for row_idx, row in enumerate(current_shape):
+                for col_idx, cell in enumerate(row):
+                    if cell:
+                        block_x = shape_x + col_idx * CELL_SIZE
+                        block_y = shape_y + row_idx * CELL_SIZE
+                        block_rect = pygame.Rect(block_x, block_y, CELL_SIZE, CELL_SIZE)
+                        if block_rect.collidepoint(mouse_x, mouse_y):
+                            dragging = True
+                            selected_shape = current_shape
+
+        if event.type == pygame.MOUSEMOTION and dragging:
+            mouse_x, mouse_y = event.pos
+            shape_x = mouse_x - (CELL_SIZE // 2)
+            shape_y = mouse_y - (CELL_SIZE // 2)
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            dragging = False
+            shape_x = round(shape_x / CELL_SIZE) * CELL_SIZE
+            shape_y = round(shape_y / CELL_SIZE) * CELL_SIZE
+
     screen.fill((30, 30, 30))
 
     draw_grid()
 
-    draw_shape(current_shape, 100, 100)
+    draw_shape(current_shape, shape_x, shape_y)
 
     pygame.display.flip()
 
