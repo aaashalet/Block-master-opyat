@@ -28,7 +28,7 @@ def draw_grid():
 
 
 def draw_shape(shape, pos_x, pos_y):
-    block_color = (25, 25, 112)
+    block_color = (75, 0, 130)
     for row_idx, row in enumerate(shape):
         for col_idx, cell in enumerate(row):
             if cell:
@@ -49,9 +49,14 @@ def draw_board():
 
 def clear_full_lines():
     global game_board
-    for row_idx in range(GRID_SIZE):
-        if all(game_board[row_idx]):  # Если вся строка заполнена
-            game_board[row_idx] = [0] * GRID_SIZE  # Очищаем строку
+    game_board = [row for row in game_board if not all(row)]
+    while len(game_board) < GRID_SIZE:
+        game_board.insert(0, [0] * GRID_SIZE)
+
+    for col in range(GRID_SIZE):
+        if all(game_board[row][col] for row in range(GRID_SIZE)):
+            for row in range(GRID_SIZE):
+                game_board[row][col] = 0
 
 
 def can_place_shape(shape, grid_x, grid_y):
