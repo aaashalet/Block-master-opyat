@@ -11,6 +11,8 @@ GRID_SIZE = 10
 CELL_SIZE = WIDTH // GRID_SIZE
 GRID_COLOR = (50, 50, 50)
 
+game_board = [[0] * GRID_SIZE for _ in range(GRID_SIZE)]
+
 current_shape = get_random_shape()
 
 selected_shape = None
@@ -26,13 +28,49 @@ def draw_grid():
 
 
 def draw_shape(shape, pos_x, pos_y):
-    block_color = (0, 200, 255)
+    block_color = (25, 25, 112)
     for row_idx, row in enumerate(shape):
         for col_idx, cell in enumerate(row):
             if cell:
                 x = pos_x + col_idx * CELL_SIZE
                 y = pos_y + row_idx * CELL_SIZE
                 pygame.draw.rect(screen, block_color, (x, y, CELL_SIZE, CELL_SIZE))
+
+
+def draw_board():
+    block_color = (25, 25, 112)
+    for row_idx, row in enumerate(game_board):
+        for col_idx, cell in enumerate(row):
+            if cell:
+                x = col_idx * CELL_SIZE
+                y = row_idx * CELL_SIZE
+                pygame.draw.rect(screen, block_color, (x, y, CELL_SIZE, CELL_SIZE))
+
+
+def clear_full_lines():
+    global game_board
+    for row_idx in range(GRID_SIZE):
+        if all(game_board[row_idx]):  # Если вся строка заполнена
+            game_board[row_idx] = [0] * GRID_SIZE  # Очищаем строку
+
+
+def can_place_shape(shape, grid_x, grid_y):
+    for row_idx, row in enumerate(shape):
+        for col_idx, cell in enumerate(row):
+            if cell:
+                board_x = grid_x + col_idx
+                board_y = grid_y + row_idx
+                if board_x >= GRID_SIZE or board_y >= GRID_SIZE or game_board[board_y][board_x] == 1:
+                    return False
+    return True
+
+
+def can_place_anywhere(shape):
+    for grid_y in range(GRID_SIZE):
+        for grid_x in range(GRID_SIZE):
+            if can_place_shape(shape, grid_x, grid_y):
+                return True
+    return False
 
 
 running = True
@@ -63,10 +101,27 @@ while running:
             shape_x = round(shape_x / CELL_SIZE) * CELL_SIZE
             shape_y = round(shape_y / CELL_SIZE) * CELL_SIZE
 
-    screen.fill((30, 30, 30))
+            grid_x, grid_y = shape_x // CELL_SIZE, shape_y // CELL_SIZE
+
+            if can_place_shape(current_shape, grid_x, grid_y):
+                for row_idx, row in enumerate(current_shape):
+                    for col_idx, cell in enumerate(row):
+                        if cell:
+                            game_board[grid_y + row_idx][grid_x + col_idx] = 1
+
+                clear_full_lines()
+
+                if not can_place_anywhere(current_shape):
+                    print("Игра окончена!")
+                    running = False
+                else:
+                    current_shape = get_random_shape()
+                    shape_x, shape_y = 100, 100
+
+    screen.fill((0, 0, 0))
 
     draw_grid()
-
+    draw_board()
     draw_shape(current_shape, shape_x, shape_y)
 
     pygame.display.flip()
