@@ -12,6 +12,7 @@ CELL_SIZE = WIDTH // GRID_SIZE
 GRID_COLOR = (50, 50, 50)
 
 game_board = [[0] * GRID_SIZE for _ in range(GRID_SIZE)]
+
 current_shape = get_random_shape()
 
 selected_shape = None
@@ -46,16 +47,19 @@ def draw_board():
                 pygame.draw.rect(screen, block_color, (x, y, CELL_SIZE, CELL_SIZE))
 
 
-def clear_full_lines():
+def clear_full_lines_and_columns():
     global game_board
-    game_board = [row for row in game_board if not all(row)]
-    while len(game_board) < GRID_SIZE:
-        game_board.insert(0, [0] * GRID_SIZE)
 
-    for col in range(GRID_SIZE):
-        if all(game_board[row][col] for row in range(GRID_SIZE)):
+    # Очищаем полностью заполненные строки
+    for row_idx in range(GRID_SIZE):
+        if all(game_board[row_idx]):
+            game_board[row_idx] = [0] * GRID_SIZE
+
+    # Очищаем полностью заполненные столбцы
+    for col_idx in range(GRID_SIZE):
+        if all(game_board[row][col_idx] for row in range(GRID_SIZE)):
             for row in range(GRID_SIZE):
-                game_board[row][col] = 0
+                game_board[row][col_idx] = 0
 
 
 def can_place_shape(shape, grid_x, grid_y):
@@ -113,7 +117,7 @@ while running:
                         if cell:
                             game_board[grid_y + row_idx][grid_x + col_idx] = 1
 
-                clear_full_lines()
+                clear_full_lines_and_columns()
 
                 if not can_place_anywhere(current_shape):
                     print("Игра окончена!")
