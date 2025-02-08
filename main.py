@@ -1,5 +1,5 @@
 import pygame
-import menu  # Импортируем меню
+import menu 
 from shapes import get_random_shape
 
 pygame.init()
@@ -90,7 +90,6 @@ def can_place_anywhere(shape):
     return False
 
 
-# Показываем меню перед стартом игры
 menu.show_menu(screen)
 
 running = True
@@ -127,7 +126,7 @@ while running:
                                 game_board[grid_y + row_idx][grid_x + col_idx] = 1
 
                     placed_shapes[selected_shape] = True
-                    selected_shape = None  # Убираем фантомную фигуру
+                    selected_shape = None 
 
                     clear_full_lines_and_columns()
 
@@ -147,7 +146,7 @@ while running:
     draw_board()
     for i, (shape, (x, y)) in enumerate(zip(current_shapes, shape_positions)):
         if not placed_shapes[i]:
-            draw_shape(shape, x, y, (75, 0, 130))  # Фиолетовый цвет
+            draw_shape(shape, x, y, (75, 0, 130)) 
 
     pygame.display.flip()
 
