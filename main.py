@@ -110,7 +110,7 @@ def can_place_anywhere(shape):
 menu.show_menu(screen)
 
 running = True
-while running:
+while running: #Очень на самом деле грязный код, довольно много вещей которые не работают, Но есть в коде, это то из за своей невнимательности, с кем не бывает)))
     mouse_x, mouse_y = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
