@@ -16,4 +16,4 @@ def show_game_over_screen(screen, score):
 
     pygame.display.flip()
 
-    pygame.time.delay(3000)  # Задержка перед выходом
+    pygame.time.delay(3000)  
