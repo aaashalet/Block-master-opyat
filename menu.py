@@ -1,12 +1,6 @@
 import pygame
 import random
-
-settings = {
-    "volume": 1.0,
-    "effects": True,
-    "random_colors": False,
-    "selected_color": (75, 0, 130)
-}
+import settings
 
 
 def show_menu(screen):
@@ -46,21 +40,16 @@ def show_settings(screen):
         back_text = font.render("Назад", True, (255, 0, 0))
         back_rect = back_text.get_rect(center=(screen.get_width() // 2, screen.get_height() - 50))
 
-        effects_text = font.render(f"Звуковые эффекты: {'Вкл' if settings['effects'] else 'Выкл'}", True,
+        effects_text = font.render(f"Звуковые эффекты: {'Вкл' if settings.config['effects'] else 'Выкл'}", True,
                                    (255, 255, 255))
         effects_rect = effects_text.get_rect(center=(screen.get_width() // 2, 200))
 
-        color_text = font.render(f"Случайные цвета(оно не работает(((): {'Вкл' if settings['random_colors'] else 'Выкл'}", True,
-                                 (255, 255, 255))
-        color_rect = color_text.get_rect(center=(screen.get_width() // 2, 300))
-
-        choose_color_text = font.render("Выбор цвета(не работает))", True, settings['selected_color'])
-        choose_color_rect = choose_color_text.get_rect(center=(screen.get_width() // 2, 400))
+        music_text = font.render(f"Музыка: {'Вкл' if settings.config['music'] else 'Выкл'}", True, (255, 255, 255))
+        music_rect = music_text.get_rect(center=(screen.get_width() // 2, 300))
 
         screen.blit(back_text, back_rect)
         screen.blit(effects_text, effects_rect)
-        screen.blit(color_text, color_rect)
-        screen.blit(choose_color_text, choose_color_rect)
+        screen.blit(music_text, music_rect)
 
         pygame.display.flip()
 
@@ -72,10 +61,9 @@ def show_settings(screen):
                 if back_rect.collidepoint(event.pos):
                     return
                 elif effects_rect.collidepoint(event.pos):
-                    settings['effects'] = not settings['effects']
-                elif color_rect.collidepoint(event.pos):
-                    settings['random_colors'] = not settings['random_colors']
-                elif choose_color_rect.collidepoint(event.pos):
-                    settings['selected_color'] = random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)])
+                    settings.config['effects'] = not settings.config['effects']
+                elif music_rect.collidepoint(event.pos):
+                    settings.config['music'] = not settings.config['music']
+                    settings.apply_settings()
 
         pygame.time.delay(100)
